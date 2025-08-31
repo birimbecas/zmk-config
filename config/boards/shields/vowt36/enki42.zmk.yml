@@ -1,0 +1,13 @@
+file_format: "1"
+id: vowt36
+name: Vowt36 
+type: shield
+url: https://github.com/birimbecas/zmk-config
+requires: [pro_micro]
+#exposes: [i2c_oled]
+features:
+  - keys
+siblings:
+  - vowt36_left
+  - vowt36_right
+  - vowt36_dongle

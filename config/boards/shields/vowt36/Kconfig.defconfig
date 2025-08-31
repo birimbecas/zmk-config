@@ -1,0 +1,27 @@
+if SHIELD_VOWT36_DONGLE
+
+config ZMK_KEYBOARD_NAME
+	default "Vowt36 Dongle"
+	
+config ZMK_SPLIT_BLE_ROLE_CENTRAL
+	default y
+	
+config ZMK_USB
+	default y
+
+endif
+
+if SHIELD_VOWT36_LEFT || SHIELD_VOWT36_RIGHT || SHIELD_VOWT36_DONGLE 
+
+config ZMK_SPLIT
+	default y
+
+config ZMK_BLE
+	default y
+	
+endif
+
+
+# Battery reporting
+# CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y
+# CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY=y
