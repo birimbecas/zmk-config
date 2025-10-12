@@ -1,7 +1,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include "keys_pt.h"
-#include "accents.h"
+#include "accents.dtsi"
 
 #define DEF 0
 #define LWR 1
@@ -37,8 +37,8 @@
 
             bindings = <
 &kp Q  &kp W  &kp E  &kp R  &kp T  &kp LEFT_CONTROL  &kp Y  &kp U  &kp I      &kp O       &kp P      &kp BACKSPACE
-&kp agrv  &kp S  &kp D  &kp F  &kp G  &kp SPACE         &kp H  &kp J  &kp K      &kp L       &kp EQUAL  &kp SPACE
-&kp Z  &kp X  &kp C  &kp V  &kp B  &kp ENTER         &kp N  &kp M  &kp COMMA  &kp PERIOD  &kp SLASH  &kp RIGHT_SHIFT
+&ac_agrv  &kp S  &kp D  &kp F  &kp G  &kp SPACE         &kp H  &kp J  &kp K      &kp L       &kp EQUAL  &kp SPACE
+&kp Z  &kp X  &ac_ccdi  &kp V  &kp B  &kp ENTER         &kp N  &kp M  &kp COMMA  &kp PERIOD  &kp SLASH  &kp RIGHT_SHIFT
             >;
         };
     };
