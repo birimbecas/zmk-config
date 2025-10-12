@@ -25,10 +25,120 @@
         };
     };
 
+    macros {
+        DeadKey: new_macro {
+            compatible = "zmk,behavior-macro-two-param";
+            #binding-cells = <2>;
+            bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &macro_param_2to1 &kp MACRO_PLACEHOLDER>;
+            label = "NEW_MACRO";
+        };
+    };
+
+    behaviors {
+        a_grv: a_grv {
+            compatible = "zmk,behavior-mod-morph";
+            label = "A_GRV";
+            bindings = <&DeadKey PT_GRAVE A>, <&DeadKey PT_GRAVE LS(A)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        a_acu: a_acu {
+            compatible = "zmk,behavior-mod-morph";
+            label = "A_ACU";
+            bindings = <&DeadKey PT_ACUTE A>, <&DeadKey PT_ACUTE LS(A)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        a_til: a_til {
+            compatible = "zmk,behavior-mod-morph";
+            label = "A_TIL";
+            bindings = <&DeadKey PT_TILDE A>, <&DeadKey PT_TILDE LS(A)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        a_cir: a_cir {
+            compatible = "zmk,behavior-mod-morph";
+            label = "A_CIR";
+            bindings = <&DeadKey PT_CARET A>, <&DeadKey PT_CARET LS(A)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        e_acu: e_acu {
+            compatible = "zmk,behavior-mod-morph";
+            label = "E_ACU";
+            bindings = <&DeadKey PT_ACUTE E>, <&DeadKey PT_ACUTE LS(E)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        e_cir: e_cir {
+            compatible = "zmk,behavior-mod-morph";
+            label = "E_CIR";
+            bindings = <&DeadKey PT_CARET E>, <&DeadKey PT_CARET LS(E)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        i_acu: i_acu {
+            compatible = "zmk,behavior-mod-morph";
+            label = "I_ACU";
+            bindings = <&DeadKey PT_ACUTE I>, <&DeadKey PT_ACUTE LS(I)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        o_acu: o_acu {
+            compatible = "zmk,behavior-mod-morph";
+            label = "O_ACU";
+            bindings = <&DeadKey PT_ACUTE O>, <&DeadKey PT_ACUTE LS(O)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        o_til: o_til {
+            compatible = "zmk,behavior-mod-morph";
+            label = "O_TIL";
+            bindings = <&DeadKey PT_TILDE O>, <&DeadKey PT_TILDE LS(O)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        o_cir: o_cir {
+            compatible = "zmk,behavior-mod-morph";
+            label = "O_CIR";
+            bindings = <&DeadKey PT_CARET O>, <&DeadKey PT_CARET LS(O)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        u_acu: u_acu {
+            compatible = "zmk,behavior-mod-morph";
+            label = "U_ACU";
+            bindings = <&DeadKey PT_ACUTE U>, <&DeadKey PT_ACUTE LS(U)>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        Alpha {
             // ------------------------------------------------------------------------------------------------
             //|  |  Q  |  W  |  E  |  R  |  T  |               |  Y  |  U   |  I  |  O  |  P  |  | 
             //|  |  A  |  S  |  D  |  F  |  G  |               |  H  |  J   |  K  |  L  |  ;  |  |
@@ -37,8 +147,16 @@
 
             bindings = <
 &kp Q  &kp W  &kp E  &kp R  &kp T  &kp LEFT_CONTROL  &kp Y  &kp U  &kp I      &kp O       &kp P      &kp BACKSPACE
-&ac_agrv  &kp S  &kp D  &kp F  &kp G  &kp SPACE         &kp H  &kp J  &kp K      &kp L       &kp EQUAL  &kp SPACE
-&kp Z  &kp X  &ac_ccdi  &kp V  &kp B  &kp ENTER         &kp N  &kp M  &kp COMMA  &kp PERIOD  &kp SLASH  &kp RIGHT_SHIFT
+&kp A  &kp S  &kp D  &kp F  &kp G  &kp SPACE         &kp H  &kp J  &kp K      &kp L       &sl 1      &kp SPACE
+&kp Z  &kp X  &kp C  &kp V  &kp B  &kp ENTER         &kp N  &kp M  &kp COMMA  &kp PERIOD  &kp SLASH  &kp RIGHT_SHIFT
+            >;
+        };
+
+        Alpha2 {
+            bindings = <
+&trans  &trans  &e_acu            &trans  &trans  &trans  &trans  &u_acu        &i_acu        &o_til  &o_acu  &trans
+&a_til  &a_acu  &e_cir            &trans  &trans  &trans  &trans  &kp PT_ACUTE  &kp PT_TILDE  &o_cir  &trans  &trans
+&a_cir  &a_grv  &kp PT_C_CEDILLA  &trans  &trans  &trans  &trans  &kp PT_GRAVE  &kp PT_CARET  &trans  &trans  &trans
             >;
         };
     };
