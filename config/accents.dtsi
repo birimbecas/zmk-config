@@ -12,9 +12,7 @@
             compatible = "zmk,behavior-macro"; \
             #binding-cells = <0>; \
             bindings \
-                = <&macro_press &kp LALT> \
-                , <&macro_tap &kp DEAD_KEY> \
-                , <&macro_release &kp LALT> \
+                = <&macro_tap &kp DEAD_KEY> \
                 , <&macro_tap &kp KEY> \
                 ; \
         }; \
@@ -26,9 +24,7 @@
             #binding-cells = <0>; \
             bindings \
                 = <&macro_release &kp LSHFT> \
-                , <&macro_press &kp LALT> \
                 , <&macro_tap &kp DEAD_KEY> \
-                , <&macro_release &kp LALT> \
                 , <&macro_press &kp LSHFT> \
                 , <&macro_tap &kp KEY> \
                 , <&macro_release &kp LSHFT> \
@@ -63,9 +59,7 @@
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
-                = <&macro_press &kp LALT>
-                , <&macro_tap &kp C>
-                , <&macro_release &kp LALT>
+                = <&macro_tap &kp PT_C_CEDILLA>
                 ;
         };
     };
