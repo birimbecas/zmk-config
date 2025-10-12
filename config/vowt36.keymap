@@ -1,6 +1,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include "keys_pt.h"
+#include "accents.dtsi"
 
 #define DEF 0
 #define LWR 1
