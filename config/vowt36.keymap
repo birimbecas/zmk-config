@@ -19,9 +19,59 @@
     combos {
         compatible = "zmk,combos";
 
-        StudioUnlock {
-            bindings = <&studio_unlock>;
-            key-positions = <4 16 6 18>;
+        Bootloader-Left {
+            bindings = <&bootloader>;
+            key-positions = <5 29 4>;
+        };
+
+        BootLoader-Right {
+            bindings = <&bootloader>;
+            key-positions = <6 11 35>;
+        };
+
+        Accent-Acute {
+            bindings = <&kp PT_ACUTE>;
+            key-positions = <9 8>;
+        };
+
+        Accent-Grave {
+            bindings = <&kp PT_GRAVE>;
+            key-positions = <7 8>;
+        };
+
+        Accent-Tilde {
+            bindings = <&kp PT_TILDE>;
+            key-positions = <7 8 9>;
+        };
+
+        Accent-Caret {
+            bindings = <&kp PT_CARET>;
+            key-positions = <7 9>;
+        };
+
+        Backspace {
+            bindings = <&kp BACKSPACE>;
+            key-positions = <6 7>;
+        };
+
+        Enter {
+            bindings = <&kp ENTER>;
+            key-positions = <18 19>;
+        };
+
+        Delete {
+            bindings = <&kp DELETE>;
+            key-positions = <4 3>;
+        };
+
+        Tab {
+            bindings = <&kp TAB>;
+            key-positions = <16 15>;
+        };
+
+        Esc {
+            bindings = <&kp ESC>;
+            key-positions = <0 1>;
         };
     };
 
@@ -133,6 +183,15 @@
             #binding-cells = <0>;
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
+
+        OneShotLayer: OneShotLayer {
+            compatible = "zmk,behavior-hold-tap";
+            label = "ONESHOTLAYER";
+            bindings = <&mo>, <&sl>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+        };
     };
 
     keymap {
@@ -146,9 +205,9 @@
             //                     | RSE | SPC | LWR |   | LWR | BKSP | RSE |
 
             bindings = <
-&kp Q  &kp W  &kp E  &kp R  &kp T  &kp LEFT_CONTROL  &kp Y  &kp U  &kp I      &kp O       &kp P      &kp BACKSPACE
-&kp A  &kp S  &kp D  &kp F  &kp G  &kp SPACE         &kp H  &kp J  &kp K      &kp L       &sl 1      &kp SPACE
-&kp Z  &kp X  &kp C  &kp V  &kp B  &kp ENTER         &kp N  &kp M  &kp COMMA  &kp PERIOD  &kp SLASH  &kp RIGHT_SHIFT
+&kp Q  &kp W               &kp E           &kp R           &kp T  &kp SPACE          &kp Y  &kp U            &kp I                  &kp O                   &kp P      &OneShotLayer 5 5
+&kp A  &mt LEFT_CONTROL S  &mt LALT D      &mt LSHIFT F    &kp G  &OneShotLayer 2 2  &kp H  &mt RSHIFT J     &mt RALT K             &mt RIGHT_CONTROL L     &sl 1      &OneShotLayer 4 4
+&kp Z  &mt LEFT_WIN X      &mt LEFT_WIN C  &mt LEFT_WIN V  &kp B  &OneShotLayer 3 3  &kp N  &mt RIGHT_WIN M  &mt LEFT_WIN PT_COMMA  &mt LEFT_WIN PT_PERIOD  &kp SLASH  &kp SPACE
             >;
         };
 
@@ -157,6 +216,38 @@
 &trans  &trans  &e_acu            &trans  &trans  &trans  &trans  &u_acu        &i_acu        &o_til  &o_acu  &trans
 &a_til  &a_acu  &e_cir            &trans  &trans  &trans  &trans  &kp PT_ACUTE  &kp PT_TILDE  &o_cir  &trans  &trans
 &a_cir  &a_grv  &kp PT_C_CEDILLA  &trans  &trans  &trans  &trans  &kp PT_GRAVE  &kp PT_CARET  &trans  &trans  &trans
+            >;
+        };
+
+        layer_2 {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            >;
+        };
+
+        layer_3 {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            >;
+        };
+
+        layer_4 {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+            >;
+        };
+
+        layer_5 {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
     };
