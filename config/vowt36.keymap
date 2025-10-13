@@ -192,6 +192,15 @@
             #binding-cells = <2>;
             tapping-term-ms = <200>;
         };
+
+        Question: Question {
+            compatible = "zmk,behavior-mod-morph";
+            label = "QUESTION";
+            bindings = <&kp PT_QUESTION>, <&kp PT_EXCLAMATION>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
     };
 
     keymap {
@@ -207,7 +216,7 @@
             bindings = <
 &kp Q  &kp W               &kp E           &kp R           &kp T  &kp SPACE          &kp Y  &kp U            &kp I                  &kp O                   &kp P      &OneShotLayer 5 5
 &kp A  &mt LEFT_CONTROL S  &mt LALT D      &mt LSHIFT F    &kp G  &OneShotLayer 2 2  &kp H  &mt RSHIFT J     &mt RALT K             &mt RIGHT_CONTROL L     &sl 1      &OneShotLayer 4 4
-&kp Z  &mt LEFT_WIN X      &mt LEFT_WIN C  &mt LEFT_WIN V  &kp B  &OneShotLayer 3 3  &kp N  &mt RIGHT_WIN M  &mt LEFT_WIN PT_COMMA  &mt LEFT_WIN PT_PERIOD  &kp SLASH  &kp SPACE
+&kp Z  &mt LEFT_WIN X      &mt LEFT_WIN C  &mt LEFT_WIN V  &kp B  &OneShotLayer 3 3  &kp N  &mt RIGHT_WIN M  &mt LEFT_WIN PT_COMMA  &mt LEFT_WIN PT_PERIOD  &Question  &kp SPACE
             >;
         };
 
