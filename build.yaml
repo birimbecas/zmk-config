@@ -19,7 +19,7 @@
 #
 ---
 include:
-  - board: seeeduino_xiao_ble
+  - board: xiao_ble
     shield: vowt36_dongle
 
   - board: nice_nano_v2
