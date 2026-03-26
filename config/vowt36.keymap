@@ -206,7 +206,7 @@
     keymap {
         compatible = "zmk,keymap";
 
-        Alpha {
+        Base {
             // ------------------------------------------------------------------------------------------------
             //|  |  Q  |  W  |  E  |  R  |  T  |               |  Y  |  U   |  I  |  O  |  P  |  | 
             //|  |  A  |  S  |  D  |  F  |  G  |               |  H  |  J   |  K  |  L  |  ;  |  |
@@ -214,45 +214,39 @@
             //                     | RSE | SPC | LWR |   | LWR | BKSP | RSE |
 
             bindings = <
-&kp Q  &kp W               &kp E           &kp R           &kp T  &kp SPACE          &kp Y  &kp U            &kp I                  &kp O                   &kp P      &OneShotLayer 5 5
-&kp A  &mt LEFT_CONTROL S  &mt LALT D      &mt LSHIFT F    &kp G  &OneShotLayer 2 2  &kp H  &mt RSHIFT J     &mt RALT K             &mt RIGHT_CONTROL L     &sl 1      &OneShotLayer 4 4
-&kp Z  &mt LEFT_WIN X      &mt LEFT_WIN C  &mt LEFT_WIN V  &kp B  &OneShotLayer 3 3  &kp N  &mt RIGHT_WIN M  &mt LEFT_WIN PT_COMMA  &mt LEFT_WIN PT_PERIOD  &Question  &kp SPACE
+&kp Q           &kp W           &kp E             &kp R               &kp T  &lt 1 SPACE   &kp Y  &kp U                &kp I              &kp O            &kp P                       &lt 3 ENTER
+&mt LEFT_GUI A  &mt LEFT_ALT S  &mt LEFT_SHIFT D  &mt LEFT_CONTROL F  &kp G  &kp ENTER     &kp H  &mt RIGHT_CONTROL J  &mt RIGHT_SHIFT K  &mt RIGHT_ALT L  &mt RIGHT_GUI PT_C_CEDILLA  &kp BACKSPACE
+&kp Z           &kp X           &kp C             &kp V               &kp B  &lt 3 DELETE  &kp N  &kt M                &kt PT_COMMA       &kp PT_PERIOD    &kp PT_MINUS                &lt 2 SPACE
+            >;
+
+            label = "Base";
+        };
+
+        NAV {
+            bindings = <
+&kp ESC       &trans  &kp PT_ORDF  &kp PT_ORDM  &kp PRINTSCREEN  &trans  &kp PAGE_UP    &kp HOME           &kp UP    &kp END          &trans  &trans
+&kp TAB       &trans  &trans       &trans       &kp INSERT       &trans  &kp PAGE_DOWN  &kp LEFT           &kp DOWN  &kp RIGHT        &trans  &trans
+&kp CAPSLOCK  &trans  &trans       &trans       &kp KP_NUMLOCK   &trans  &trans         &sk RIGHT_CONTROL  &trans    &sk RIGHT_SHIFT  &trans  &trans
             >;
         };
 
-        Alpha2 {
+        SYM {
             bindings = <
-&trans  &trans  &e_acu            &trans  &trans  &trans  &trans  &u_acu        &i_acu        &o_til  &o_acu  &trans
-&a_til  &a_acu  &e_cir            &trans  &trans  &trans  &trans  &kp PT_ACUTE  &kp PT_TILDE  &o_cir  &trans  &trans
-&a_cir  &a_grv  &kp PT_C_CEDILLA  &trans  &trans  &trans  &trans  &kp PT_GRAVE  &kp PT_CARET  &trans  &trans  &trans
+&kp PT_EXCLAMATION  &kp PT_AT_SIGN  &kp PT_HASH   &kp PT_DOLLAR     &kp PT_PERCENT       &trans  &kp PT_AMPERSAND   &kp PT_ASTERISK  &kp PT_LEFT_BRACE        &kp PT_RIGHT_BRACE        &kp PT_DOUBLE_QUOTES  &trans
+&kp PT_GRAVE        &kp PT_TILDE    &kp PT_CARET  &kp PT_ACUTE      &kp PT_EURO          &trans  &kp PT_EQUAL       &kp PT_PLUS      &kp PT_LEFT_PARENTHESIS  &kp PT_RIGHT_PARENTHESIS  &kp PT_SINGLE_QUOTE   &trans
+&kp PT_BACKSLASH    &kp PT_PIPE     &kp PT_SLASH  &kp PT_LESS_THAN  &kp PT_GREATER_THAN  &trans  &kp PT_UNDERSCORE  &kp PT_MINUS     &kp PT_LEFT_BRACKET      &kp PT_RIGHT_BRACKET      &kp PT_QUESTION       &trans
             >;
         };
 
-        layer_2 {
+        NUM {
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
-        layer_3 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&kp F1     &kp F2  &kp F3  &kp F4   &kp F5   &trans  &trans     &kp N7  &kp N8  &kp N9  &kp N0     &trans
+&kp F6     &kp F7  &kp F8  &kp F9   &kp F10  &trans  &kp COMMA  &kp N4  &kp N5  &kp N6  &kp DOT    &trans
+&sk LSHFT  &trans  &trans  &kp F11  &kp F12  &trans  &trans     &kp N1  &kp N2  &kp N3  &kp ENTER  &trans
             >;
         };
 
         layer_4 {
-            bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
-        layer_5 {
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
