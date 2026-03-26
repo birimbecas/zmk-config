@@ -9,6 +9,15 @@ config ZMK_SPLIT_BLE_ROLE_CENTRAL
 config ZMK_USB
 	default y
 
+config SPI
+	default y
+
+config DISPLAY
+	default y
+
+config IL0373
+	default y
+
 endif
 
 if SHIELD_VOWT36_LEFT || SHIELD_VOWT36_RIGHT || SHIELD_VOWT36_DONGLE 

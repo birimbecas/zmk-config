@@ -29,3 +29,34 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
 	};
 
 };
+
+&spi1 {
+    status = "okay";
+    pinctrl-0 = <&spi1_default>;
+    pinctrl-names = "default";
+    cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+};
+
+// WeAct 1.54" ePaper Display (IL0373 controller)
+epd@0 {
+    compatible = "weact,1.54-epd", "il0373";
+    reg = <0>;
+    label = "EPAPER";
+    spi-max-frequency = <4000000>;
+    spi-cpol;
+    spi-cpha;
+    
+    // Pin assignments for XIAO BLE
+    // Adjust these pins based on your actual hardware connections
+    cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;     // P0.11 (D4)
+    dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;    // P0.12 (D5) - Data/Command
+    reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;  // P0.13 (D6) - Reset
+    busy-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;   // P0.14 (D7) - Busy
+    
+    width = <200>;
+    height = <200>;
+    
+    #address-cells = <1>;
+    #size-cells = <0>;
+    status = "okay";
+};
