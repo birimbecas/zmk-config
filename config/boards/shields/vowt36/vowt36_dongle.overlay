@@ -12,6 +12,7 @@
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
+#include <dt-bindings/mipi_dbi/mipi_dbi.h>
 
 / {
     chosen {
@@ -41,28 +42,50 @@ RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4) RC(1,5)  RC(1,6) RC(1,7) RC(1,8) RC(1,9)
 RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11)
         >;
     };
+
+    /*
+     * MIPI DBI SPI bridge node lives in the root (/), NOT under &spi1.
+     * It references &spi1 via spi-dev. CS is managed here, not on &spi1.
+     */
+    mipi_dbi: mipi_dbi {
+        compatible = "zephyr,mipi-dbi-spi";
+        spi-dev = <&spi1>;
+        cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;    /* P0.11 - CS  (D4) */
+        dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;   /* P0.12 - D/C (D5) */
+        reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>; /* P0.13 - RST (D6) */
+        write-only;                                /* ePaper is write-only, no MISO */
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        ssd1681: ssd1681@0 {
+            compatible = "solomon,ssd1681";
+            reg = <0>;
+            mipi-max-frequency = <4000000>;
+            mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
+            /* SSD1681 BUSY is active HIGH (high = busy) */
+            busy-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* P0.14 - BUSY (D7) */
+            width  = <200>;
+            height = <200>;
+        };
+    };
 };
 
 /*
- * SPI1 is used as the MIPI DBI SPI transport.
- * MISO is unused by ePaper but pinctrl still needs a valid pin; we reuse
- * the BUSY pin direction is input-only so sharing GPIO 6 as a dummy MISO
- * is safe — nothing will drive it. Alternatively any unused pin works.
+ * SPI1 peripheral — only MOSI + SCK needed (write-only display).
+ * No MISO, no cs-gpios here; CS is owned by the mipi-dbi node above.
  */
 &pinctrl {
     spi1_default: spi1_default {
         group1 {
-            psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>,   /* P0.08 - SDA/DIN */
-                    <NRF_PSEL(SPIM_SCK,  0, 7)>,   /* P0.07 - SCL/CLK */
-                    <NRF_PSEL(SPIM_MISO, 0, 6)>;   /* P0.06 - unused, dummy */
+            psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>,  /* P0.08 - SDA/DIN (D9)  */
+                    <NRF_PSEL(SPIM_SCK,  0, 7)>;  /* P0.07 - SCL/CLK (D10) */
         };
     };
 
     spi1_sleep: spi1_sleep {
         group1 {
             psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>,
-                    <NRF_PSEL(SPIM_SCK,  0, 7)>,
-                    <NRF_PSEL(SPIM_MISO, 0, 6)>;
+                    <NRF_PSEL(SPIM_SCK,  0, 7)>;
             low-power-enable;
         };
     };
@@ -73,33 +96,5 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
     pinctrl-0 = <&spi1_default>;
     pinctrl-1 = <&spi1_sleep>;
     pinctrl-names = "default", "sleep";
-    cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;  /* P0.11 - CS (D4) */
-
-    /*
-     * MIPI DBI SPI bridge node.
-     * The SSD1681 driver sits on the mipi-dbi bus, not directly on SPI.
-     */
-    mipi_dbi: mipi_dbi@0 {
-        compatible = "zephyr,mipi-dbi-spi";
-        reg = <0>;
-        spi-max-frequency = <4000000>;
-        dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;   /* P0.12 - D/C (D5) */
-        reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>; /* P0.13 - RST (D6) */
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        ssd1681: ssd1681@0 {
-            compatible = "solomon,ssd1681";
-            reg = <0>;
-            mipi-max-frequency = <4000000>;
-            mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
-            busy-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* P0.14 - BUSY (D7) */
-            /*
-             * SSD1681 BUSY pin is active HIGH (busy when high).
-             * The Zephyr ssd16xx driver expects GPIO_ACTIVE_HIGH here.
-             */
-            width  = <200>;
-            height = <200>;
-        };
-    };
+    /* cs-gpios intentionally omitted — managed by mipi_dbi node */
 };
