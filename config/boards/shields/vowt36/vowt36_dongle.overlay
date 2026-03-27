@@ -45,12 +45,11 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
 
     /*
      * MIPI DBI SPI bridge node lives in the root (/), NOT under &spi1.
-     * It references &spi1 via spi-dev. CS is managed here, not on &spi1.
+     * It references &spi1 via spi-dev. CS is declared on &spi1 (below).
      */
     mipi_dbi: mipi_dbi {
         compatible = "zephyr,mipi-dbi-spi";
         spi-dev = <&spi1>;
-        cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;    /* P0.11 - CS  (D4) */
         dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;   /* P0.12 - D/C (D5) */
         reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>; /* P0.13 - RST (D6) */
         write-only;                                /* ePaper is write-only, no MISO */
@@ -72,7 +71,7 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
 
 /*
  * SPI1 peripheral — only MOSI + SCK needed (write-only display).
- * No MISO, no cs-gpios here; CS is owned by the mipi-dbi node above.
+ * cs-gpios goes here; the display's reg = <0> selects the first CS entry.
  */
 &pinctrl {
     spi1_default: spi1_default {
@@ -96,5 +95,6 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
     pinctrl-0 = <&spi1_default>;
     pinctrl-1 = <&spi1_sleep>;
     pinctrl-names = "default", "sleep";
-    /* cs-gpios intentionally omitted — managed by mipi_dbi node */
+    /* CS for the ePaper (reg = <0> in the display child selects this) */
+    cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;  /* P0.11 - CS (D4) */
 };
