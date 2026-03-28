@@ -44,15 +44,15 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
     };
 
     /*
-     * MIPI DBI SPI bridge node lives in the root (/), NOT under &spi1.
-     * It references &spi1 via spi-dev. CS is declared on &spi1 (below).
+     * MIPI DBI SPI bridge — lives in root (/), references &spi1 via spi-dev.
+     * CS is declared on &spi1 below; reg = <0> selects the first CS entry.
      */
     mipi_dbi: mipi_dbi {
         compatible = "zephyr,mipi-dbi-spi";
         spi-dev = <&spi1>;
-        dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;   /* P0.12 - D/C (D5) */
-        reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>; /* P0.13 - RST (D6) */
-        write-only;                                /* ePaper is write-only, no MISO */
+        dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;    /* P0.12 - D/C (D5) */
+        reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;  /* P0.13 - RST (D6) */
+        write-only;
         #address-cells = <1>;
         #size-cells = <0>;
 
@@ -61,23 +61,39 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
             reg = <0>;
             mipi-max-frequency = <4000000>;
             mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
-            /*
-             * BUSY is active HIGH (high = busy).
-             * GPIO_PULL_DOWN ensures it reads LOW (not busy) if floating,
-             * preventing the driver from hanging on init indefinitely.
-             */
+
+            /* BUSY is active HIGH (high = busy) */
             busy-gpios = <&gpio0 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+
             width  = <200>;
             height = <200>;
-            /* Use internal temperature sensor — required for proper init */
+
+            /* Use internal temperature sensor */
             tssv = <1>;
+
+            /*
+             * Panel-specific initialization values for GDEH0154D67 / SSD1681.
+             * These match the confirmed working values from the Zephyr
+             * waveshare_epaper_gdeh0154a07 shield and community reports.
+             *
+             * softstart: Booster soft-start control (0x0C command)
+             * gdv:       Gate driving voltage
+             * sdv:       Source driving voltage
+             * vcom:      VCOM voltage
+             * border-waveform: Border waveform control
+             */
+            softstart = [8B 9C 96 0F];
+            gdv = [15];
+            sdv = [41 A8 32];
+            vcom = <0x36>;
+            border-waveform = <0x05>;
         };
     };
 };
 
 /*
- * SPI1 peripheral — only MOSI + SCK needed (write-only display).
- * cs-gpios goes here; the display's reg = <0> selects the first CS entry.
+ * SPI1 — MOSI + SCK only (write-only ePaper, no MISO needed).
+ * cs-gpios here; the mipi_dbi/ssd1681 nodes use reg = <0> to select it.
  */
 &pinctrl {
     spi1_default: spi1_default {
@@ -101,6 +117,5 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
     pinctrl-0 = <&spi1_default>;
     pinctrl-1 = <&spi1_sleep>;
     pinctrl-names = "default", "sleep";
-    /* CS for the ePaper (reg = <0> in the display child selects this) */
     cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;  /* P0.11 - CS (D4) */
 };
