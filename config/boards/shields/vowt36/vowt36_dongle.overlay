@@ -61,10 +61,16 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
             reg = <0>;
             mipi-max-frequency = <4000000>;
             mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
-            /* SSD1681 BUSY is active HIGH (high = busy) */
-            busy-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* P0.14 - BUSY (D7) */
+            /*
+             * BUSY is active HIGH (high = busy).
+             * GPIO_PULL_DOWN ensures it reads LOW (not busy) if floating,
+             * preventing the driver from hanging on init indefinitely.
+             */
+            busy-gpios = <&gpio0 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
             width  = <200>;
             height = <200>;
+            /* Use internal temperature sensor — required for proper init */
+            tssv = <1>;
         };
     };
 };
