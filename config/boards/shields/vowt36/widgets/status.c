@@ -58,7 +58,7 @@ static inline void canvas_draw_text(lv_layer_t *layer, lv_draw_label_dsc_t *dsc,
                                     const char *txt) {
     dsc->text = txt;
     lv_area_t a = {x, y, x + w - 1, y + dsc->font->line_height - 1};
-    lv_draw_label(layer, dsc, &a);
+    lv_draw_label(layer, dsc);
 }
 
 /* Helper: draw rect onto a layer */
