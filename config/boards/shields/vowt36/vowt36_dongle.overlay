@@ -73,6 +73,7 @@ board_spi: &spi0 {
     mipi_dbi_ssd1681: mipi-dbi-spi@0 {
         compatible = "zephyr,mipi-dbi-spi";
         reg = <0>;
+        spi-dev = <&spi0>;
         spi-max-frequency = <4000000>;
         dc-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
         reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
