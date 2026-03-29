@@ -18,7 +18,7 @@
     chosen {
         zmk,kscan = &mock_kscan;
         zmk,matrix_transform = &default_transform;
-        zephyr,display = &ssd1681;
+        zephyr,display = &weact_154;
     };
 
     mock_kscan: mock_kscan_0 {
@@ -42,80 +42,35 @@ RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4) RC(1,5)  RC(1,6) RC(1,7) RC(1,8) RC(1,9)
 RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11)
         >;
     };
-
-    /*
-     * MIPI DBI SPI bridge — lives in root (/), references &spi1 via spi-dev.
-     * CS is declared on &spi1 below; reg = <0> selects the first CS entry.
-     */
-    mipi_dbi: mipi_dbi {
-        compatible = "zephyr,mipi-dbi-spi";
-        spi-dev = <&spi1>;
-        dc-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;    /* P0.12 - D/C (D5) */
-        reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;  /* P0.13 - RST (D6) */
-        write-only;
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        ssd1681: ssd1681@0 {
-            compatible = "solomon,ssd1681";
-            reg = <0>;
-            mipi-max-frequency = <4000000>;
-            mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
-
-            /* BUSY is active HIGH (high = busy) */
-            busy-gpios = <&gpio0 14 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
-
-            width  = <200>;
-            height = <200>;
-
-            /* Use internal temperature sensor */
-            tssv = <1>;
-
-            /*
-             * Panel-specific initialization values for GDEH0154D67 / SSD1681.
-             * These match the confirmed working values from the Zephyr
-             * waveshare_epaper_gdeh0154a07 shield and community reports.
-             *
-             * softstart: Booster soft-start control (0x0C command)
-             * gdv:       Gate driving voltage
-             * sdv:       Source driving voltage
-             * vcom:      VCOM voltage
-             * border-waveform: Border waveform control
-             */
-            softstart = [8B 9C 96 0F];
-            gdv = [15];
-            sdv = [41 A8 32];
-            vcom = <0x36>;
-            border-waveform = <0x05>;
-        };
-    };
 };
 
-/*
- * SPI1 — MOSI + SCK only (write-only ePaper, no MISO needed).
- * cs-gpios here; the mipi_dbi/ssd1681 nodes use reg = <0> to select it.
- */
-&pinctrl {
-    spi1_default: spi1_default {
-        group1 {
-            psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>,  /* P0.08 - SDA/DIN (D9)  */
-                    <NRF_PSEL(SPIM_SCK,  0, 7)>;  /* P0.07 - SCL/CLK (D10) */
-        };
+board_spi: &spi0 {
+  status = "okay";
+  compatible = "nordic,nrf-spim";
+  pinctrl-0 = <&spi0_default>;
+  pinctrl-1 = <&spi0_sleep>;
+  pinctrl-names = "default", "sleep";
+
+  cs-gpios =  <&gpio0 11 GPIO_ACTIVE_LOW> ;
+
+  weact_154: ssd16xxfb@0 {
+    compatible = "gooddisplay,gdeh0154a07", "solomon,ssd1681";
+    spi-max-frequency = <4000000>;
+    reg = <0>;
+    width = <200>;
+    height = <200>;
+    dc-gpios = <&gpio0 12 7 GPIO_ACTIVE_LOW>;
+    reset-gpios = <&gpio0 13 8 GPIO_ACTIVE_LOW>;
+    busy-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+
+    tssv = <0x80>;
+
+    full {
+      border-waveform = <0x05>;
     };
 
-    spi1_sleep: spi1_sleep {
-        group1 {
-            psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>,
-                    <NRF_PSEL(SPIM_SCK,  0, 7)>;
-            low-power-enable;
-        };
+    partial {
+      border-waveform = <0x3c>;
     };
-};
-
-&spi1 {
-    status = "okay";
-    pinctrl-0 = <&spi1_default>;
-    pinctrl-1 = <&spi1_sleep>;
-    pinctrl-names = "default", "sleep";
-    cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;  /* P0.11 - CS (D4) */
+  };
 };
