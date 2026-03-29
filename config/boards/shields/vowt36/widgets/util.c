@@ -14,15 +14,28 @@ void rotate_canvas(lv_obj_t *canvas, lv_color_t cbuf[], int angle) {
 
     static lv_color_t cbuf_tmp[CONFIG_DISP_CANVAS * CONFIG_DISP_CANVAS];
     memcpy(cbuf_tmp, cbuf, sizeof(cbuf_tmp));
-    lv_img_dsc_t img;
+    lv_image_dsc_t img;
     img.data = (void *)cbuf_tmp;
     img.header.cf = LV_COLOR_FORMAT_ARGB8888;
     img.header.w = CONFIG_DISP_CANVAS;
     img.header.h = CONFIG_DISP_CANVAS;
 
     lv_canvas_fill_bg(canvas, LVGL_BACKGROUND, LV_OPA_COVER);
-    lv_canvas_transform(canvas, &img, angle, LV_ZOOM_NONE, -1, 0, CONFIG_DISP_CANVAS / 2,
-                        CONFIG_DISP_CANVAS / 2, true);
+
+    lv_layer_t layer;
+    lv_canvas_init_layer(canvas, &layer);
+
+    lv_draw_image_dsc_t img_dsc;
+    lv_draw_image_dsc_init(&img_dsc);
+    img_dsc.src = &img;
+    img_dsc.rotation = angle;
+    img_dsc.pivot.x = CONFIG_DISP_CANVAS / 2;
+    img_dsc.pivot.y = CONFIG_DISP_CANVAS / 2;
+
+    lv_area_t area = {0, 0, CONFIG_DISP_CANVAS - 1, CONFIG_DISP_CANVAS - 1};
+    lv_draw_image(&layer, &img_dsc, &area);
+
+    lv_canvas_finish_layer(canvas, &layer);
 }
 
 void draw_battery(lv_obj_t *canvas, const struct status_state *state) {
@@ -31,17 +44,36 @@ void draw_battery(lv_obj_t *canvas, const struct status_state *state) {
     lv_draw_rect_dsc_t rect_white_dsc;
     init_rect_dsc(&rect_white_dsc, LVGL_FOREGROUND);
 
-    lv_canvas_draw_rect(canvas, 0, 2, 29, 12, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 1, 3, 27, 10, &rect_black_dsc);
-    lv_canvas_draw_rect(canvas, 2, 4, (state->battery + 2) / 4, 8, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 30, 5, 3, 6, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 31, 6, 1, 4, &rect_black_dsc);
+    lv_layer_t layer;
+    lv_canvas_init_layer(canvas, &layer);
+
+    lv_area_t a;
+
+    // Outer border
+    a = (lv_area_t){0, 2, 28, 13};
+    lv_draw_rect(&layer, &rect_white_dsc, &a);
+    // Inner fill (black)
+    a = (lv_area_t){1, 3, 27, 12};
+    lv_draw_rect(&layer, &rect_black_dsc, &a);
+    // Charge level
+    a = (lv_area_t){2, 4, 2 + (state->battery + 2) / 4 - 1, 11};
+    lv_draw_rect(&layer, &rect_white_dsc, &a);
+    // Battery nub outer
+    a = (lv_area_t){30, 5, 32, 10};
+    lv_draw_rect(&layer, &rect_white_dsc, &a);
+    // Battery nub inner
+    a = (lv_area_t){31, 6, 31, 9};
+    lv_draw_rect(&layer, &rect_black_dsc, &a);
 
     if (state->charging) {
         lv_draw_image_dsc_t img_dsc;
         lv_draw_image_dsc_init(&img_dsc);
-        lv_canvas_draw_img(canvas, 9, -1, &bolt, &img_dsc);
+        img_dsc.src = &bolt;
+        lv_area_t bolt_area = {9, 0, 9 + bolt.header.w - 1, bolt.header.h - 1};
+        lv_draw_image(&layer, &img_dsc, &bolt_area);
     }
+
+    lv_canvas_finish_layer(canvas, &layer);
 }
 
 void init_label_dsc(lv_draw_label_dsc_t *label_dsc, lv_color_t color, const lv_font_t *font,
