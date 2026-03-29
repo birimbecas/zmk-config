@@ -12,7 +12,8 @@
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
-#include <dt-bindings/mipi_dbi/mipi_dbi.h>
+#include <dt-bindings/pinctrl/nrf-pinctrl.h>
+
 
 / {
     chosen {
@@ -44,10 +45,30 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
     };
 };
 
+&pinctrl {
+    spi0_default: spi0_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK,  0, 2)>,   /* D8 / SCK  */
+                    <NRF_PSEL(SPIM_MOSI, 0, 3)>,   /* D10 / MOSI */
+                    <NRF_PSEL(SPIM_MISO, 0, 28)>;  /* unused MISO */
+        };
+    };
+    spi0_sleep: spi0_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK,  0, 2)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 3)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 28)>;
+            low-power-enable;
+        };
+    };
+};
+
 board_spi: &spi0 {
   status = "okay";
   compatible = "nordic,nrf-spim";
-  spi-dev = <&spi1>;
+  pinctrl-0 = <&spi0_default>;
+  pinctrl-1 = <&spi0_sleep>;
+  pinctrl-names = "default", "sleep";
   cs-gpios =  <&gpio0 11 GPIO_ACTIVE_LOW> ;
 
   weact_154: ssd16xxfb@0 {
