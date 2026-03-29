@@ -65,30 +65,35 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
 
 board_spi: &spi0 {
   status = "okay";
-  compatible = "nordic,nrf-spim";
   pinctrl-0 = <&spi0_default>;
   pinctrl-1 = <&spi0_sleep>;
   pinctrl-names = "default", "sleep";
   cs-gpios =  <&gpio0 11 GPIO_ACTIVE_LOW> ;
 
-  weact_154: ssd16xxfb@0 {
-    compatible = "gooddisplay,gdeh0154a07", "solomon,ssd1681";
-    spi-max-frequency = <4000000>;
-    reg = <0>;
-    width = <200>;
-    height = <200>;
-    dc-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
-    reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
-    busy-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+    mipi_dbi_ssd1681: mipi-dbi-spi@0 {
+        compatible = "zephyr,mipi-dbi-spi";
+        reg = <0>;
+        spi-max-frequency = <4000000>;
+        dc-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
+        reset-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+        #address-cells = <1>;
+        #size-cells = <0>;
 
-    tssv = <0x80>;
+        weact_154: ssd16xxfb@0 {
+            compatible = "gooddisplay,gdeh0154a07", "solomon,ssd1681";
+            mipi-max-frequency = <4000000>;
+            reg = <0>;
+            width = <200>;
+            height = <200>;
+            busy-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+            tssv = <0x80>;
 
-    full {
-      border-waveform = <0x05>;
+            full {
+                border-waveform = <0x05>;
+            };
+            partial {
+                border-waveform = <0x3c>;
+            };
+        };
     };
-
-    partial {
-      border-waveform = <0x3c>;
-    };
-  };
 };

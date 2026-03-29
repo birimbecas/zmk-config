@@ -15,7 +15,6 @@
 / {
     macros {
         numdot: numdot {
-            label = "ZM_numdot";
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             wait-ms = <40>;
@@ -27,7 +26,6 @@
                 ;
         };
         grtsgn: grtsgn {
-            label = "ZM_grtsgn";
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             wait-ms = <40>;
