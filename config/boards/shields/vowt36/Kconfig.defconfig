@@ -1,124 +1,58 @@
-if SHIELD_VOWT36_DONGLE || SHIELD_WEACT_EINK_154
+if SHIELD_VOWT36_DONGLE
 
 config ZMK_KEYBOARD_NAME
-	default "Vowt36 Dongle" if SHIELD_VOWT36_DONGLE
-	default "Vowt36 Dongle eInk" if SHIELD_WEACT_EINK_154
-
+	default "Vowt36 Dongle"
+	
 config ZMK_SPLIT_BLE_ROLE_CENTRAL
 	default y
-
+	
 config ZMK_USB
 	default y
 
-config SPI
-	default y
-
-config ZMK_DISPLAY
-	select LV_USE_CONT
-	select LV_FONT_MONTSERRAT_26
-
 if ZMK_DISPLAY
 
-config SYSTEM_WORKQUEUE_STACK_SIZE
-    default 2048
+config I2C
+    default y
 
-config LV_Z_MEM_POOL_SIZE
-     default 4096
-
-choice LV_FONT_DEFAULT
-    default LV_FONT_DEFAULT_MONTSERRAT_26
-
-endchoice
+config SSD1306
+    default y
 
 choice ZMK_DISPLAY_WORK_QUEUE
     default ZMK_DISPLAY_WORK_QUEUE_DEDICATED
 endchoice
 
-
-config ZMK_DISPLAY_DEDICATED_THREAD_STACK_SIZE
-    default 4096
-
-config ZMK_DISPLAY_DEDICATED_THREAD_PRIORITY
-    default 10
-
-choice ZMK_LV_FONT_DEFAULT_SMALL
-    default ZMK_LV_FONT_DEFAULT_SMALL_MONTSERRAT_26
-
-endchoice
-
-config LS0XX
-  default n
-
-config ST7735R
-  default n  
-
-config LV_Z_BITS_PER_PIXEL
-	default 1
-
-choice LV_COLOR_DEPTH
-	default LV_COLOR_DEPTH_1
-
-endchoice
-
-config LV_DPI_DEF
-	default 161 if SHIELD_WEACT_EINK_154
-  default 161 
+if LVGL
 
 config LV_Z_VDB_SIZE
-	default 100
+    default 64
 
-config ZMK_DISPLAY_STATUS_SCREEN_CUSTOM
-   imply MLEGO_WIDGET_STATUS
+config LV_DPI_DEF
+    default 148
 
-config MLEGO_BONGO_CAT
-   bool "enable bongo cat on th widgt"
-   imply MLEGO_WIDGET_STATUS
-   select ZMK_WPM
-   select LVGL_USE_ANIMATION
-  
-config MLEGO_WIDGET_STATUS
-    bool "Custom mlego status widget"
-    select LV_FONT_MONTSERRAT_16
-    select LV_FONT_MONTSERRAT_14
-    select LV_FONT_MONTSERRAT_18
-    select LV_USE_IMG
-    select LV_USE_CANVAS
+config LV_Z_BITS_PER_PIXEL
+    default 1
 
-config MLEGO_BONGO_CAT_IDLE_LIMIT
-    int "Upper limit for WPM for showing idle animation"
-    default 30
+choice LV_COLOR_DEPTH
+    default LV_COLOR_DEPTH_1
+endchoice
 
-config MLEGO_BONGO_CAT_SLOW_LIMIT
-    int "Upper limit for WPM for showing slow typing image"
-    default 60
-
-config DISP_WIDTH
-   int "width of the mip, sharp, memory display"
-   default 160
-
-config DISP_HEIGHT
-   int "height of the mip, sharp, memory display"
-   default 68
-
-config DISP_CANVAS
-   int "canvas size of the mip, sharp, memory display"
-   default 68
-
-config DISP_ROTATE
-   int "angle to rotate elements in screen mip, sharp, memory display in units of 0.1"
-   default 0
-
+endif # LVGL
 
 endif # ZMK_DISPLAY
 
-endif # Dongle
+endif #SHIELD_VOWT36_DONGLE
 
-if SHIELD_VOWT36_LEFT || SHIELD_VOWT36_RIGHT || SHIELD_VOWT36_DONGLE
+if SHIELD_VOWT36_LEFT || SHIELD_VOWT36_RIGHT || SHIELD_VOWT36_DONGLE 
 
 config ZMK_SPLIT
 	default y
 
 config ZMK_BLE
 	default y
+	
+endif #SHIELD_VOWT36_LEFT || SHIELD_VOWT36_RIGHT || SHIELD_VOWT36_DONGLE 
 
-endif
+
+# Battery reporting
+# CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y
+# CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY=y

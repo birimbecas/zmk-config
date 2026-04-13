@@ -20,7 +20,7 @@
 ---
 include:
   - board: xiao_ble
-    shield: vowt36_dongle
+    shield: vowt36_dongle dongle_display
 
   - board: nice_nano
     shield: vowt36_right
